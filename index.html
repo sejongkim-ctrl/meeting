@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 회의 어시스턴트</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0e1117;
+      color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      text-align: center;
+      max-width: 420px;
+      padding: 48px 32px;
+    }
+    .icon { font-size: 48px; margin-bottom: 16px; }
+    h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .sub { color: #888; font-size: 14px; margin-bottom: 32px; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #333;
+      border-top-color: #ff4b4b;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status { color: #aaa; font-size: 13px; }
+    .offline {
+      background: #1e1e2e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+      display: none;
+    }
+    .offline h2 { font-size: 15px; margin-bottom: 8px; color: #ff4b4b; }
+    .offline p { font-size: 13px; color: #999; line-height: 1.6; }
+  </style>
+  <!--
+    TUNNEL_URL 을 수정하면 리다이렉트 대상이 바뀝니다.
+    start_tunnel.sh 스크립트가 이 값을 자동으로 갱신합니다.
+  -->
+  <script>
+    var TUNNEL_URL = "https://reports-pac-parking-africa.trycloudflare.com";
+
+    function redirect() {
+      // 터널 URL이 비어있으면 오프라인 안내 표시
+      if (!TUNNEL_URL || TUNNEL_URL === "OFFLINE") {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("offline").style.display = "block";
+        return;
+      }
+      // 접속 가능 여부 확인 후 리다이렉트
+      window.location.replace(TUNNEL_URL);
+    }
+
+    // 페이지 로드 후 0.5초 뒤 리다이렉트 (로딩 화면 잠깐 보여주기)
+    window.onload = function() { setTimeout(redirect, 500); };
+  </script>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🎙️</div>
+    <h1>AI 회의 어시스턴트</h1>
+    <p class="sub">회의 세션으로 연결 중입니다</p>
+
+    <div id="loading">
+      <div class="spinner"></div>
+      <p class="status">잠시만 기다려주세요...</p>
+    </div>
+
+    <div id="offline" class="offline">
+      <h2>현재 세션이 종료됐습니다</h2>
+      <p>
+        호스트가 회의 서버를 실행하지 않은 상태입니다.<br>
+        회의 시작 시 새 링크가 자동으로 연결됩니다.<br>
+        호스트에게 서버 실행을 요청해주세요.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
